@@ -1,7 +1,7 @@
-# 🏗️ Chantier — Project Memory & Complete Guide
+# 🏗️ Clearway — Project Memory & Complete Guide
 
 > **Last updated:** 2026-05-01 — Phase 9: Manual Furniture Library & Placement  
-> **Purpose:** Living memory of the Chantier project. Every architectural decision, feature built, file, API, and evolution from day one. Single source of truth.
+> **Purpose:** Living memory of the Clearway project. Every architectural decision, feature built, file, API, and evolution from day one. Single source of truth.
 
 > ⚠️ **Maintenance rule:** After every feature or fix, update this file AND `README.md` before finishing.
 > 
@@ -14,12 +14,12 @@
 
 ---
 
-## 📌 What Is Chantier?
+## 📌 What Is Clearway?
 
-**Chantier** (French for "construction site") is a **mobile-first SaaS web application** for construction project managers in Tunisia. It centralizes budget tracking, contractor management, expense logging, document storage, and 3D floor plan visualization in one bilingual (FR/AR) tool.
+**Clearway** is a **mobile-first SaaS web application** for construction project managers in Tunisia. It centralizes budget tracking, contractor management, expense logging, document storage, and 3D floor plan visualization in one bilingual (FR/AR) tool.
 
 ### The Problem It Solves
-Small construction businesses in North Africa manage budgets, contractors, and documents through WhatsApp, paper notebooks, or spreadsheets. Chantier replaces all of that.
+Small construction businesses in North Africa manage budgets, contractors, and documents through WhatsApp, paper notebooks, or spreadsheets. Clearway replaces all of that.
 
 ### Core Purpose
 - Track multiple construction **projects** with budgets (TND)
@@ -65,10 +65,10 @@ Small construction businesses in North Africa manage budgets, contractors, and d
 ## 📁 Full File Structure
 
 ```
-chantier/
+clearway/
 ├── run.sh                          # One-command launcher (backend + frontend)
 ├── README.md
-├── CHANTIER_PROJECT_MEMORY.md      # This file
+├── CLEARWAY_PROJECT_MEMORY.md      # This file
 │
 ├── backend/
 │   ├── index.js                    # Express app entry point
@@ -237,7 +237,7 @@ Triggered by clicking "3D" on an image document.
 ## ▶️ Running the App
 
 ```bash
-cd /Users/anoircherif/Desktop/BAZZ/chantier
+cd /Users/anoircherif/Desktop/BAZZ/clearway
 chmod +x run.sh
 ./run.sh
 ```

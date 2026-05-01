@@ -18,15 +18,24 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [newProject, setNewProject] = useState({ name: '', location: '', startDate: '', budget: '', description: '' });
-  const [successMsg, setSuccessMsg] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => { fetchProjects(); }, []);
 
   const fetchProjects = async () => {
     try {
       const { data } = await axios.get(`${API}/api/projects`);
-      setProjects(data);
-    } catch (err) { console.error(err); }
+      if (Array.isArray(data)) {
+        setProjects(data);
+        setError('');
+      } else if (data && data.error) {
+        setError(data.error);
+        setProjects([]);
+      }
+    } catch (err) { 
+      console.error(err);
+      setError(t('error_fetching_data', 'Erreur lors de la récupération des données'));
+    }
     finally { setLoading(false); }
   };
 
@@ -92,6 +101,15 @@ export default function Dashboard() {
           animation: 'slideUp 0.3s ease'
         }}>
           <CheckCircle size={16} /> {successMsg}
+        </div>
+      )}
+
+      {/* ── Error Message ── */}
+      {error && (
+        <div className="card mb-6" style={{ background: 'var(--danger-light)', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '1rem' }}>
+          <p style={{ fontWeight: '700' }}>{t('error')}: {error}</p>
+          <p className="text-sm mt-1">Check your DATABASE_URL in Vercel settings and ensure you ran 'npx prisma db push'.</p>
+          <button className="btn btn-sm mt-3" onClick={fetchProjects}>{t('retry', 'Réessayer')}</button>
         </div>
       )}
 
