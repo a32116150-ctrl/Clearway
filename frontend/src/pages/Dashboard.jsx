@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [submitting, setSubmitting] = useState(false);
   const [newProject, setNewProject] = useState({ name: '', location: '', startDate: '', budget: '', description: '' });
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => { fetchProjects(); }, []);
 
@@ -62,13 +63,13 @@ export default function Dashboard() {
   };
 
   // ── Computed Stats ──────────────────────────────────
-  const globalBudget   = projects.reduce((s, p) => s + p.budget, 0);
-  const globalSpent    = projects.reduce((s, p) => s + p.expenses.reduce((a, e) => a + e.amount, 0), 0);
+  const globalBudget   = projects.reduce((s, p) => s + (p.budget || 0), 0);
+  const globalSpent    = projects.reduce((s, p) => s + (p.expenses || []).reduce((a, e) => a + (e.amount || 0), 0), 0);
   const globalRemain   = globalBudget - globalSpent;
   const globalPct      = globalBudget > 0 ? Math.min(((globalSpent / globalBudget) * 100), 100) : 0;
-  const totalContractors = projects.reduce((s, p) => s + p.contractors.length, 0);
+  const totalContractors = projects.reduce((s, p) => s + (p.contractors || []).length, 0);
 
-  const allExpenses = projects.flatMap(p => p.expenses.map(e => ({ ...e, projectName: p.name })));
+  const allExpenses = projects.flatMap(p => (p.expenses || []).map(e => ({ ...e, projectName: p.name })));
   allExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
   const recentExpenses = allExpenses.slice(0, 6);
 
@@ -78,7 +79,7 @@ export default function Dashboard() {
   const categories = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
 
   // Most active projects (by expense count)
-  const projectsByActivity = [...projects].sort((a, b) => b.expenses.length - a.expenses.length);
+  const projectsByActivity = [...projects].sort((a, b) => (b.expenses || []).length - (a.expenses || []).length);
 
   if (loading) return (
     <div className="loader-container">
@@ -271,7 +272,7 @@ export default function Dashboard() {
                     )}
                   </div>
                   <div className="flex align-center gap-2">
-                    {isOverBudget && <span className="badge badge-red">Dépassé</span>}
+                    {p.budget > 0 && p.expenses?.reduce((s, e) => s + e.amount, 0) > p.budget && <span className="badge badge-red">Dépassé</span>}
                     <button className="icon-btn danger" onClick={e => handleDelete(e, p.id)}><Trash2 size={15} /></button>
                   </div>
                 </div>
@@ -280,28 +281,32 @@ export default function Dashboard() {
                 <div className="flex justify-between" style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>
                   <div>
                     <div className="text-muted" style={{ fontSize: '0.68rem', textTransform: 'uppercase', marginBottom: '2px' }}>{t('budget')}</div>
-                    <div className="font-bold">{p.budget.toLocaleString()}</div>
+                    <div className="font-bold">{(p.budget || 0).toLocaleString()}</div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <div className="text-muted" style={{ fontSize: '0.68rem', textTransform: 'uppercase', marginBottom: '2px' }}>{t('spent')}</div>
-                    <div className="font-bold text-danger">{spent.toLocaleString()}</div>
+                    <div className="font-bold text-danger">{(p.expenses || []).reduce((s, e) => s + e.amount, 0).toLocaleString()}</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div className="text-muted" style={{ fontSize: '0.68rem', textTransform: 'uppercase', marginBottom: '2px' }}>{t('remaining')}</div>
-                    <div className="font-bold" style={{ color: remain < 0 ? 'var(--danger)' : 'var(--primary)' }}>{remain.toLocaleString()}</div>
+                    <div className="font-bold" style={{ color: ((p.budget || 0) - (p.expenses || []).reduce((s, e) => s + e.amount, 0)) < 0 ? 'var(--danger)' : 'var(--primary)' }}>
+                      {((p.budget || 0) - (p.expenses || []).reduce((s, e) => s + e.amount, 0)).toLocaleString()}
+                    </div>
                   </div>
                 </div>
 
                 {/* Progress */}
                 <div>
                   <div className="flex justify-between mb-2" style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                    <span>{p.expenses.length} {t('expenses')} · {p.contractors.length} {t('contractors')}</span>
-                    <span style={{ fontWeight: '700', color: isOverBudget ? 'var(--danger)' : 'var(--text-main)' }}>{pct.toFixed(0)}%</span>
+                    <span>{(p.expenses || []).length} {t('expenses')} · {(p.contractors || []).length} {t('contractors')}</span>
+                    <span style={{ fontWeight: '700', color: (p.expenses || []).reduce((s, e) => s + e.amount, 0) > p.budget ? 'var(--danger)' : 'var(--text-main)' }}>
+                      {p.budget > 0 ? Math.min(((p.expenses || []).reduce((s, e) => s + e.amount, 0) / p.budget) * 100, 100).toFixed(0) : 0}%
+                    </span>
                   </div>
                   <div className="progress-track-muted">
                     <div style={{
-                      height: '100%', width: `${pct}%`,
-                      background: isOverBudget ? 'var(--danger)' : pct > 75 ? 'var(--warning)' : 'var(--primary)',
+                      height: '100%', width: `${p.budget > 0 ? Math.min(((p.expenses || []).reduce((s, e) => s + e.amount, 0) / p.budget) * 100, 100) : 0}%`,
+                      background: (p.expenses || []).reduce((s, e) => s + e.amount, 0) > p.budget ? 'var(--danger)' : 'var(--primary)',
                       borderRadius: '3px', transition: 'width 0.8s ease'
                     }} />
                   </div>
