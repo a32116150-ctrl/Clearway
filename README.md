@@ -1,7 +1,7 @@
 # Chantier — Construction SaaS
 
 > A mobile-first, bilingual (French / Arabic RTL) SaaS for managing construction projects in Tunisia.  
-> Built with React + Vite (frontend) · Node.js + Express (backend) · SQLite + Prisma (database).
+> Built with React + Vite (frontend) · Node.js + Express (backend) · PostgreSQL + Prisma (database).
 
 ---
 
@@ -12,6 +12,13 @@ cd /Users/anoircherif/Desktop/BAZZ/chantier
 chmod +x run.sh
 ./run.sh
 ```
+
+### 🔴 PRODUCTION DEPLOYMENT (Vercel)
+The project is configured for Vercel + PostgreSQL (Neon).
+1. Get a **Neon.tech** DATABASE_URL.
+2. Add `DATABASE_URL` and `JWT_SECRET` to Vercel Environment Variables.
+3. Run `npx prisma db push` in the `backend/` folder to sync the schema.
+4. Deploy on Vercel.
 
 - **Frontend:** http://localhost:5173  
 - **Backend API:** http://localhost:5001
@@ -35,7 +42,7 @@ cd frontend && npm install && npm run dev
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 18, Vite, React Router 6, Axios, i18next, Lucide icons, Three.js |
-| Backend | Node.js, Express 5, Prisma ORM 6.4.1, SQLite |
+| Backend | Node.js, Express 5, Prisma ORM 6.4.1, PostgreSQL (Neon) |
 | Auth | bcryptjs (hashing) + jsonwebtoken (JWT, 7d) |
 | File uploads | multer → `backend/uploads/` |
 | Styling | Vanilla CSS (custom design system, no Tailwind) |
@@ -200,6 +207,7 @@ DATABASE_URL="file:./dev.db"
 | 10 | Advanced 3D Tools: Drag & Move, Custom Wall Tool with axis scaling |
 | 11 | Editable Auto-Walls: Rectangular decomposition, horizon/pitch fixes |
 | 12 | Advanced Contractor Dashboards: Financial health, team size, EDM document vault |
+| 13 | Production Migration: Vercel preparation, vercel.json, PostgreSQL transition |
 
 > See `CHANTIER_PROJECT_MEMORY.md` for full detail on every phase.
 

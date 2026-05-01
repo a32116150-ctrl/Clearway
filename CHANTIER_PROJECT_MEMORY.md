@@ -4,6 +4,13 @@
 > **Purpose:** Living memory of the Chantier project. Every architectural decision, feature built, file, API, and evolution from day one. Single source of truth.
 
 > ⚠️ **Maintenance rule:** After every feature or fix, update this file AND `README.md` before finishing.
+> 
+> ## 🔴 CRITICAL NEXT STEPS (DO THIS FIRST)
+> 1. **Database Setup**: Create a **Neon.tech** PostgreSQL database.
+> 2. **Environment Variables**: Update `.env` (local) and Vercel dashboard with the new `DATABASE_URL` and `JWT_SECRET`.
+> 3. **Sync Schema**: Run `npx prisma db push` from the `backend/` folder to initialize the new database.
+> 4. **Test Connection**: Run the app locally with the new DB to verify account creation works and persists.
+> 5. **Vercel Deploy**: Import the repo to Vercel and check that the build succeeds.
 
 ---
 
@@ -558,3 +565,24 @@ Moved from a simple modal to a dedicated **full-page professional command center
 4. **CRUD Enhancements**:
    - Implemented a full **Edit Contractor** workflow.
    - Updated DB schema and API routes to support the expanded profile fields.
+
+---
+
+## 🚀 Phase 13 — Production Readiness & Vercel Migration (2026-05-01)
+
+**User Objective:** Move from a local development environment (SQLite) to a persistent, production-grade cloud hosting (Vercel + PostgreSQL).
+
+### Key Architectural Changes
+1. **Prisma Provider Swap**: Migrated from `sqlite` to `postgresql` in `schema.prisma`. This allows the app to use a persistent cloud database like **Neon**, since Vercel's filesystem is read-only/stateless.
+2. **Serverless Backend**: Updated `backend/index.js` to export the `app` instance, allowing Vercel to treat the Express server as a **Vercel Function**.
+3. **Monorepo Orchestration**: Created `vercel.json` in the root to handle routing:
+   - `/api/(.*)` → Routes to the Express backend.
+   - `/(.*)` → Routes to the Vite frontend.
+4. **Environment Fluidity**:
+   - Frontend updated to use relative paths (`/api`) for API calls.
+   - `vite.config.js` updated with a `server.proxy` to maintain local development functionality (mapping `/api` to `localhost:5001`).
+
+### Deployment Checklist
+1. **Neon Database**: Provides the persistent storage.
+2. **Vercel Projects**: Handles the hosting of both frontend and backend.
+3. **Prisma DB Push**: Required to sync the local schema with the cloud DB (`npx prisma db push`).
