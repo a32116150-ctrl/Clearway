@@ -11,14 +11,11 @@
       "config": { "distDir": "dist" }
     }
   ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "backend/index.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "backend/index.js" },
+    { "src": "/uploads/(.*)", "dest": "backend/uploads/$1" },
+    { "src": "/(.*)", "dest": "/$1", "continue": true },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
   ]
 }

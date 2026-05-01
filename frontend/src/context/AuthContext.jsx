@@ -20,19 +20,29 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('/api/auth/login', { email, password });
-    Cookies.set('token', data.token);
-    Cookies.set('user', JSON.stringify(data.user));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-    setUser(data.user);
+    try {
+      const { data } = await axios.post('/api/auth/login', { email, password });
+      Cookies.set('token', data.token);
+      Cookies.set('user', JSON.stringify(data.user));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      setUser(data.user);
+    } catch (err) {
+      console.error("Login API Error:", err.response?.status, err.response?.data);
+      throw err;
+    }
   };
 
   const register = async (name, email, password) => {
-    const { data } = await axios.post('/api/auth/register', { name, email, password });
-    Cookies.set('token', data.token);
-    Cookies.set('user', JSON.stringify(data.user));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-    setUser(data.user);
+    try {
+      const { data } = await axios.post('/api/auth/register', { name, email, password });
+      Cookies.set('token', data.token);
+      Cookies.set('user', JSON.stringify(data.user));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      setUser(data.user);
+    } catch (err) {
+      console.error("Register API Error:", err.response?.status, err.response?.data);
+      throw err;
+    }
   };
 
   const logout = () => {
