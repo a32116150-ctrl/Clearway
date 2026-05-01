@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('http://localhost:5001/api/auth/login', { email, password });
+    const { data } = await axios.post('/api/auth/login', { email, password });
     Cookies.set('token', data.token);
     Cookies.set('user', JSON.stringify(data.user));
     axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-    const { data } = await axios.post('http://localhost:5001/api/auth/register', { name, email, password });
+    const { data } = await axios.post('/api/auth/register', { name, email, password });
     Cookies.set('token', data.token);
     Cookies.set('user', JSON.stringify(data.user));
     axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;

@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import FloorViewer3D from '../components/FloorViewer3D';
 
-const API = 'http://localhost:5001';
+const API = '';
 
 export default function ProjectDetails() {
   const { id } = useParams();

@@ -8,7 +8,7 @@ import {
   MapPin, Calendar, ArrowRight, X, CheckCircle
 } from 'lucide-react';
 
-const API = 'http://localhost:5001';
+const API = '';
 
 export default function Dashboard() {
   const { t } = useTranslation();

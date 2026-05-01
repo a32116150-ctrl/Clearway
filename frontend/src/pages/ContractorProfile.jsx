@@ -10,7 +10,7 @@ import {
   Calendar, Hash, Activity, Shield, Star, Layers, Eye
 } from 'lucide-react';
 
-const API = 'http://localhost:5001';
+const API = '';
 
 // ── inline style tokens (no external CSS dependency) ────────────────────────
 const T = {
