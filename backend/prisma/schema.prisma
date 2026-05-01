@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  projects  Project[]
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  budget      Float    @default(0)
+  location    String?
+  startDate   DateTime?
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  expenses    Expense[]
+  contractors Contractor[]
+  documents   Document[]
+  createdAt   DateTime @default(now())
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  amount      Float
+  category    String   @default("مواد")
+  note        String?
+  date        DateTime @default(now())
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contractorId Int?
+  contractor  Contractor? @relation(fields: [contractorId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Contractor {
+  id              Int       @id @default(autoincrement())
+  name            String
+  phone           String?
+  specialty       String?
+  teamSize        Int       @default(1)
+  totalBudget     Float     @default(0)
+  advancePaid     Float     @default(0)
+  suppliesDetails String?
+  projectId       Int
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  expenses        Expense[]
+  documents       Document[]
+  createdAt       DateTime  @default(now())
+}
+
+model Document {
+  id           Int         @id @default(autoincrement())
+  name         String
+  url          String
+  projectId    Int
+  project      Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contractorId Int?
+  contractor   Contractor? @relation(fields: [contractorId], references: [id])
+  createdAt    DateTime    @default(now())
+}
